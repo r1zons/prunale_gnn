@@ -3,7 +3,9 @@ prev_results/*
 .vscode
 __pycache__
 data/*
+!data/placeholder.py
 results/*
+!results/placeholder.py
 *.png
 *.csv
 *.txt
