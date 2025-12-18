@@ -1,7 +1,8 @@
-# config.py
+# config.py (обновлённый)
 import yaml
 from dataclasses import dataclass
 from typing import List, Optional
+
 
 @dataclass
 class ExperimentConfig:
@@ -39,10 +40,47 @@ CITESEER_CONFIG = ExperimentConfig(
 
 PUBMED_CONFIG = ExperimentConfig(
     dataset_name="Pubmed",
-    hidden_channels=64,  # Больше из-за размера графа
+    hidden_channels=64,
     epochs=300,
     lr=0.005,
 )
 
+# НОВЫЕ КОНФИГУРАЦИИ
+TEXAS_CONFIG = ExperimentConfig(
+    dataset_name="Texas",
+    hidden_channels=16,
+    epochs=200,
+    lr=0.01,
+    # WebKB датасеты обычно меньше, можно уменьшить hidden_channels
+)
+
+ACTOR_CONFIG = ExperimentConfig(
+    dataset_name="Actor",
+    hidden_channels=64,  # Actor имеет больше признаков (931), чем другие датасеты
+    epochs=200,
+    lr=0.01,
+    # Actor имеет 5 классов и 931 признак, может потребоваться больший скрытый слой
+)
+
+
+
+# Карта конфигураций для удобного доступа
+CONFIG_MAP = {
+    "Cora": CORR_CONFIG,
+    "Citeseer": CITESEER_CONFIG,
+    "Pubmed": PUBMED_CONFIG,
+    "Texas": TEXAS_CONFIG,
+    "Actor": ACTOR_CONFIG,
+}
+
 # Список уровней разреженности для экспериментов
 DEFAULT_SPARSITY_RATES = [0.0, 0.1, 0.3, 0.5, 0.7, 0.9]
+
+
+def get_config_for_dataset(dataset_name: str) -> ExperimentConfig:
+    """Возвращает конфигурацию для указанного датасета"""
+    if dataset_name in CONFIG_MAP:
+        return CONFIG_MAP[dataset_name]
+    else:
+        # Конфигурация по умолчанию для новых датасетов
+        return ExperimentConfig(dataset_name=dataset_name)
